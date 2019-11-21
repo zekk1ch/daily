@@ -1,0 +1,16 @@
+#nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+    #nav-select-wrapper {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .nav-icon {
+        width: 2em;
+        height: 2em;
+    }
+}

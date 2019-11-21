@@ -18,15 +18,15 @@ module.exports = {
         ]),
         new HtmlWebpackPlugin({
             template: './template.ejs',
-            title: 'PWA boilerplate',
+            title: 'daily',
         }),
         new AppManifestWebpackPlugin ({
-            logo: './assets/logo.png',
+            logo: './assets/images/logo.png',
             output: 'assets/',
             prefix: '/assets',
             persistentCache: false,
             config: {
-                appName: 'PWA boilerplate',
+                appName: 'daily',
                 appDescription: '',
                 background: '#00000000',
                 theme_color: '#fff',
