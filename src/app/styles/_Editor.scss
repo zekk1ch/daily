@@ -1,0 +1,45 @@
+#editor {
+    position: relative;
+    background-color: $editor-color;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 20px 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+
+    .editor-option-wrapper {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &.selected {
+            &:before {
+                content: '';
+                position: absolute;
+                box-shadow: 0 0 2em 1.2em $icon-shadow-color;
+            }
+
+            #editor-option-yes {
+                color: $green-color;
+            }
+            #editor-option-no {
+                color: $red-color;
+            }
+        }
+
+        .editor-icon {
+            width: 3em;
+            height: 3em;
+            z-index: 0;
+        }
+    }
+}
+
+#editor-overflow {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $overflow-color;
+}

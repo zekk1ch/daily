@@ -1,2 +1,8 @@
 #app {
+    display: flex;
+    flex-direction: column;
+
+    .view {
+        flex-grow: 1;
+    }
 }

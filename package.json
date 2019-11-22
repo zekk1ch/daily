@@ -5,8 +5,9 @@
         "dev": "webpack-dev-server"
     },
     "dependencies": {
-        "react": "^16.11.0",
-        "react-dom": "^16.11.0",
+        "react": "^16.12.0",
+        "react-animate-height": "^2.0.17",
+        "react-dom": "^16.12.0",
         "react-icons": "^3.8.0",
         "react-proptypes": "^1.0.0",
         "react-select": "^3.0.8"
