@@ -1,24 +1,21 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const AppManifestWebpackPlugin = require('app-manifest-webpack-plugin');
 
 module.exports = {
     mode: process.env.NODE_ENV || 'development',
     context: path.resolve('src'),
-    entry: './app/index.js',
-    output: {
-        filename: 'bundle.js',
+    entry: {
+        bundle: ['babel-polyfill', './app/index.js', './app/styles/index.scss'],
+        sw: ['babel-polyfill', './sw/index.js'],
     },
     plugins: [
         new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: ['**/*', '!.gitkeep'] }),
-        new CopyWebpackPlugin([
-            './sw.js',
-        ]),
         new HtmlWebpackPlugin({
             template: './template.ejs',
             title: 'daily',
+            excludeChunks: ['sw'],
         }),
         new AppManifestWebpackPlugin ({
             logo: './assets/images/logo.png',
@@ -42,7 +39,7 @@ module.exports = {
                 use: 'babel-loader',
             },
             {
-                test: /\.(c|sc|sa)ss$/,
+                test: /\.scss$/,
                 use: [
                     'style-loader',
                     'css-loader',
@@ -53,6 +50,6 @@ module.exports = {
     },
     devtool: 'source-map',
     devServer: {
-        hot: true,
+        stats: 'errors-only',
     },
 };

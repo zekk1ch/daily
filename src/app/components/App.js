@@ -7,7 +7,7 @@ import Editor from './Editor';
 class App extends React.Component {
     state = {
         view: 'day',
-        isShowingEditor: true,
+        isShowingEditor: false,
     };
 
     setView = (view) => {
