@@ -1,4 +1,6 @@
-export const fetchNetworkFirst = async (request, cacheName) => {
+import * as constants from '../constants';
+
+export const fetchNetworkFirst = async (request) => {
     let response, isResponseOk;
 
     try {
@@ -9,7 +11,7 @@ export const fetchNetworkFirst = async (request, cacheName) => {
     }
 
     if (isResponseOk) {
-        const cache = await caches.open(cacheName);
+        const cache = await caches.open(constants.CACHE_NAME);
         await cache.put(request, response.clone());
     } else {
         const cachedResponse = await caches.match(request);

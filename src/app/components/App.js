@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaUserCog } from 'react-icons/fa';
 import AnimateHeight from 'react-animate-height';
+import * as idbClient from '../idbClient';
 import Nav from './Nav';
 import Editor from './Editor';
 
