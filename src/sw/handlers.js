@@ -17,7 +17,7 @@ export const handleActivate = (e) => {
         Promise.all([
             cacheActions.invalidateForeignCaches(),
             cacheActions.invalidateForeignAssets(),
-            idbActions.upgradeObjectStores(),
+            idbActions.upgradeIdb(),
         ])
     );
 };
@@ -34,7 +34,8 @@ export const handleMessage = (e) => {
     let promise;
     switch (action) {
         case actionTypes.GET_RECORDS:
-            promise = idbActions.getRecords(data);
+            const { lower, upper } = data || {};
+            promise = idbActions.getRecords(lower, upper);
             break;
         case actionTypes.SAVE_RECORD:
             promise = idbActions.saveRecord(data);

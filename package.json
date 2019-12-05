@@ -5,14 +5,15 @@
         "dev": "webpack-dev-server"
     },
     "dependencies": {
-        "babel-polyfill": "^6.26.0",
         "idb": "^4.0.5",
         "react": "^16.12.0",
         "react-animate-height": "^2.0.17",
         "react-dom": "^16.12.0",
         "react-icons": "^3.8.0",
         "react-proptypes": "^1.0.0",
-        "react-select": "^3.0.8"
+        "react-select": "^3.0.8",
+        "react-slick": "^0.25.2",
+        "slick-carousel": "^1.8.1"
     },
     "devDependencies": {
         "@babel/core": "^7.7.2",
@@ -21,8 +22,10 @@
         "@babel/preset-react": "^7.7.0",
         "app-manifest-webpack-plugin": "^1.2.0",
         "babel-loader": "^8.0.6",
+        "babel-polyfill": "^6.26.0",
         "clean-webpack-plugin": "^3.0.0",
         "css-loader": "^3.2.0",
+        "file-loader": "^5.0.2",
         "html-webpack-plugin": "^3.2.0",
         "node-sass": "^4.13.0",
         "sass-loader": "^8.0.0",

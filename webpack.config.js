@@ -7,7 +7,7 @@ module.exports = {
     mode: process.env.NODE_ENV || 'development',
     context: path.resolve('src'),
     entry: {
-        bundle: ['babel-polyfill', './app/index.js', './app/styles/index.scss'],
+        bundle: ['babel-polyfill', './app/index.js'],
         sw: ['babel-polyfill', './sw/index.js'],
     },
     plugins: [
@@ -39,12 +39,16 @@ module.exports = {
                 use: 'babel-loader',
             },
             {
-                test: /\.scss$/,
+                test: /\.s?css$/,
                 use: [
                     'style-loader',
                     'css-loader',
                     'sass-loader',
                 ],
+            },
+            {
+                test: /\.(gif|svg|ttf|eot|woff)$/,
+                use: 'file-loader',
             },
         ],
     },

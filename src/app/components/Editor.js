@@ -2,31 +2,44 @@ import React from 'react';
 import PropTypes from 'react-proptypes';
 import { FaTimes, FaCheck } from 'react-icons/fa';
 
-const Editor = (props) => {
-    const yesOptionClassName = `editor-option-wrapper${props.value === true ? ' selected' : ''}`;
-    const noOptionClassName = `editor-option-wrapper${props.value === false ? ' selected' : ''}`;
-    const handleYesOptionClick = props.onChange.bind(this, props.value === true ? null : true);
-    const handleNoOptionClick = props.onChange.bind(this, props.value === false ? null : false);
+function Editor(props) {
+    function handleOptionClick(e) {
+        const isYesOption = e.currentTarget.classList[1] === 'yes';
+
+        let status;
+        if (isYesOption) {
+            status = props.status === true ? null : true;
+        } else {
+            status = props.status === false ? null : false;
+        }
+
+        const record = {
+            timestamp: props.timestamp,
+            status,
+        };
+        props.onSubmit(record);
+    }
 
     return (
         <>
             <div id="editor-overflow" onClick={props.onHide}/>
             <div id="editor">
-                <div className={yesOptionClassName} onClick={handleYesOptionClick}>
-                    <FaCheck id="editor-option-yes" className="editor-icon"/>
+                <div className={`editor-option-wrapper yes${props.status === true ? ' selected' : ''}`} onClick={handleOptionClick}>
+                    <FaCheck className="editor-option-icon"/>
                 </div>
-                <div className={noOptionClassName} onClick={handleNoOptionClick}>
-                    <FaTimes id="editor-option-no" className="editor-icon"/>
+                <div className={`editor-option-wrapper no${props.status === false ? ' selected' : ''}`} onClick={handleOptionClick}>
+                    <FaTimes className="editor-option-icon"/>
                 </div>
             </div>
         </>
     );
-};
+}
 
 export default Editor;
 
 Editor.propTypes = {
-    value: PropTypes.bool,
-    onChange: PropTypes.func.isRequired,
+    timestamp: PropTypes.number.isRequired,
+    status: PropTypes.bool,
+    onSubmit: PropTypes.func.isRequired,
     onHide: PropTypes.func.isRequired,
 };

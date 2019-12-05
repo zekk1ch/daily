@@ -1,6 +1,10 @@
 import * as actionTypes from '../actionTypes';
 
 const postData = (action, data) => new Promise((resolve, reject) => {
+    if (navigator.serviceWorker.controller === null) {
+        return reject('Service worker is not registered');
+    }
+
     const messageChannel = new MessageChannel();
     messageChannel.port1.onmessage = (e) => {
         if (e.data.ok) {

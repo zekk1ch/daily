@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactSelect from 'react-select';
 
-const Select = (props) => {
+function Select(props) {
     let value;
     if (props.value && props.options) {
         value = props.options.find((option) => option.value === props.value);
@@ -21,6 +21,6 @@ const Select = (props) => {
             onChange={onChange}
         />
     );
-};
+}
 
 export default Select;

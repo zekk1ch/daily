@@ -12,27 +12,32 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        &:before {
+            content: '';
+            position: absolute;
+            transition: box-shadow 400ms;
+        }
 
-        &.selected {
-            &:before {
-                content: '';
-                position: absolute;
-                box-shadow: 0 0 2em 1.2em $icon-shadow-color;
-            }
-
-            #editor-option-yes {
+        &.selected:before {
+            box-shadow: 0 0 2em 1.2em $icon-shadow-color;
+        }
+        &.selected.yes {
+            .editor-option-icon {
                 color: $green-color;
             }
-            #editor-option-no {
+        }
+        &.selected.no {
+            .editor-option-icon {
                 color: $red-color;
             }
         }
+    }
 
-        .editor-icon {
-            width: 3em;
-            height: 3em;
-            z-index: 0;
-        }
+    .editor-option-icon {
+        width: 3em;
+        height: 3em;
+        z-index: 0;
+        transition: color 200ms;
     }
 }
 
