@@ -4,15 +4,15 @@ import * as idbActions from './actions/idbActions';
 import * as networkActions from './actions/networkActions';
 import * as messageActions from './actions/messageActions';
 
-export const handleInstall = (e) => {
+export function handleInstall(e) {
     e.waitUntil(
         Promise.all([
             cacheActions.cacheAssets(),
         ])
     );
-};
+}
 
-export const handleActivate = (e) => {
+export function handleActivate(e) {
     e.waitUntil(
         Promise.all([
             cacheActions.invalidateForeignCaches(),
@@ -20,15 +20,15 @@ export const handleActivate = (e) => {
             idbActions.upgradeIdb(),
         ])
     );
-};
+}
 
-export const handleFetch = (e) => {
+export function handleFetch(e) {
     e.respondWith(
         networkActions.fetchNetworkFirst(e.request)
     );
-};
+}
 
-export const handleMessage = (e) => {
+export function handleMessage(e) {
     const { data: { action, data }, ports: [client] } = e;
 
     let promise;
@@ -51,4 +51,4 @@ export const handleMessage = (e) => {
     e.waitUntil(
         promise,
     );
-};
+}

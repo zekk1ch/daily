@@ -1,7 +1,7 @@
-export const sendResponse = (client, data) => {
+export function sendResponse(client, data) {
     client.postMessage({ ok: true, data });
-};
+}
 
-export const sendError = (client, errorMessage) => {
+export function sendError(client, errorMessage) {
     client.postMessage({ ok: false, errorMessage });
-};
+}

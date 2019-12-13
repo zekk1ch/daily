@@ -1,6 +1,6 @@
 import * as constants from '../constants';
 
-export const fetchNetworkFirst = async (request) => {
+export async function fetchNetworkFirst(request) {
     let response, isResponseOk;
 
     try {
@@ -21,4 +21,4 @@ export const fetchNetworkFirst = async (request) => {
     }
 
     return response;
-};
+}
