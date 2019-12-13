@@ -4,8 +4,10 @@ import Select from './common/Select';
 
 class Nav extends React.Component {
     state = {
-        selectValue: this.props.defaultSelectOption,
-        isSelectDisabled: false,
+        selectValue: this.props.selectOptions.find((selectOption) => selectOption.value === this.props.initialValue)
+            ? this.props.initialValue
+            : this.props.selectOptions[0] && this.props.selectOptions[0].value,
+        isSelectDisabled: !this.props.selectOptions.find((selectOption) => selectOption.value === this.props.initialValue),
     };
 
     handleIconClick = (option) => {
@@ -48,7 +50,7 @@ class Nav extends React.Component {
 export default Nav;
 
 Nav.propTypes = {
-    defaultSelectOption: PropTypes.string.isRequired,
+    initialValue: PropTypes.string.isRequired,
     selectOptions: PropTypes.arrayOf(PropTypes.exact({
         value: PropTypes.string,
         label: PropTypes.string,

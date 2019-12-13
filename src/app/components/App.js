@@ -11,23 +11,38 @@ import Months from './views/Months';
 import Settings from './views/Settings';
 
 class App extends React.Component {
+    views = {
+        DAY: dateUtils.DAY,
+        WEEK: dateUtils.WEEK,
+        MONTH: dateUtils.MONTH,
+        SETTINGS: 'settings',
+    };
     state = {
-        view: 'day',
+        view: this.views.DAY,
         isShowingEditor: false,
         timestamp: dateUtils.timestamp2dateTimestamp(Date.now()),
         records: [],
     };
 
     async componentDidMount() {
-        const minTimestamp = dateUtils.incrementTimestamp(this.state.timestamp, -1, this.state.view);
-        const maxTimestamp = dateUtils.incrementTimestamp(this.state.timestamp, 1, this.state.view);
-
-        await this.loadRecords(minTimestamp, maxTimestamp);
+        if (this.isCalendarView) {
+            await this.loadRecords();
+        }
+    }
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.state.view !== prevState.view && this.isCalendarView && !this.isLoaded) {
+            await this.loadRecords();
+        }
     }
 
-    handleViewChange = (view) => {
+    changeView = (view) => {
         this.setState({
             view,
+        });
+    };
+    changeTimestamp = (timestamp) => {
+        this.setState({
+            timestamp,
         });
     };
     openEditor = (timestamp) => {
@@ -42,7 +57,7 @@ class App extends React.Component {
         });
     };
 
-    _addEmptyRecords = (records, minTimestamp, maxTimestamp) => {
+    _fillWithEmptyRecords = (records, minTimestamp, maxTimestamp) => {
         let newRecords = records.slice();
 
         let timestamp = maxTimestamp, recordIndex = 0;
@@ -54,7 +69,7 @@ class App extends React.Component {
                 });
             }
 
-            timestamp = dateUtils.incrementTimestamp(timestamp, -1, 'day');
+            timestamp = dateUtils.incrementTimestamp(timestamp, -1, dateUtils.DAY);
             recordIndex++;
         }
 
@@ -65,11 +80,14 @@ class App extends React.Component {
 
         let stateRecords = this.state.records.slice();
         let recordsToAdd = records.slice();
-        while (stateRecords.length && recordsToAdd.length) {
-            if (recordsToAdd[0].timestamp === stateRecords[0].timestamp) {
-                newRecords.push(recordsToAdd.shift());
-                stateRecords.shift();
-                continue;
+        while (stateRecords.length || recordsToAdd.length) {
+            if (!stateRecords.length) {
+                newRecords.push(...recordsToAdd);
+                break;
+            }
+            if (!recordsToAdd.length) {
+                newRecords.push(...stateRecords);
+                break;
             }
             if (recordsToAdd[0].timestamp > stateRecords[0].timestamp) {
                 newRecords.push(recordsToAdd.shift());
@@ -77,19 +95,30 @@ class App extends React.Component {
             }
             if (recordsToAdd[0].timestamp < stateRecords[0].timestamp) {
                 newRecords.push(stateRecords.shift());
+                continue;
             }
-        }
-        if (recordsToAdd.length) {
-            newRecords.push(...recordsToAdd);
-        }
-        if (stateRecords.length) {
-            newRecords.push(...stateRecords);
+            if (recordsToAdd[0].timestamp === stateRecords[0].timestamp) {
+                newRecords.push(recordsToAdd.shift());
+                stateRecords.shift();
+            }
         }
 
         return newRecords;
     };
 
-    loadRecords = async (minTimestamp, maxTimestamp) => {
+    loadRecords = async (position) => {
+        let minTimestamp, maxTimestamp;
+        if (position === 'before') {
+            minTimestamp = this.maxTimestamp;
+            maxTimestamp = this.nextMaxTimestamp;
+        } else if (position === 'after') {
+            minTimestamp = this.nextMinTimestamp;
+            maxTimestamp = this.minTimestamp;
+        } else {
+            minTimestamp = this.nextMinTimestamp;
+            maxTimestamp = this.nextMaxTimestamp;
+        }
+
         let records;
         try {
             const query = {
@@ -102,10 +131,11 @@ class App extends React.Component {
             return;
         }
 
-        records = this._addEmptyRecords(records, minTimestamp, maxTimestamp);
+        records = this._fillWithEmptyRecords(records, minTimestamp, maxTimestamp);
+        records = this._mergeStateRecords(records);
 
         this.setState({
-            records: this._mergeStateRecords(records),
+            records,
         });
     };
     saveRecord = async (record) => {
@@ -117,69 +147,109 @@ class App extends React.Component {
             return;
         }
 
+        const records = this._mergeStateRecords([newRecord]);
+
         this.setState({
-            records: this._mergeStateRecords([newRecord]),
+            records,
         });
     };
 
-    handleLoadNeeded = async (position) => {
-        let lastLoadedTimestamp = this.state.timestamp;
-        if (this.state.records.length) {
-            lastLoadedTimestamp = position === 'before' ? this.state.records[0].timestamp : this.state.records[this.state.records.length - 1].timestamp;
+    get isCalendarView() {
+        return [
+            this.views.DAY,
+            this.views.WEEK,
+            this.views.MONTH,
+        ].includes(this.state.view);
+    }
+    get isLoaded() {
+        if (!this.state.records.length) {
+            return false;
         }
-        const incrementValue = position === 'before' ? 1 : -1;
-
-        const minTimestamp = dateUtils.incrementTimestamp(lastLoadedTimestamp, incrementValue, 'day');
-        const maxTimestamp = dateUtils.incrementTimestamp(lastLoadedTimestamp, incrementValue, this.state.view);
-
-        await this.loadRecords(minTimestamp, maxTimestamp);
-    };
-
-    get statusForTimestamp() {
+        const minTimestamp = this.state.records[this.state.records.length - 1].timestamp;
+        const maxTimestamp = this.state.records[0].timestamp;
+        return dateUtils.isFirstDayOf(minTimestamp, this.state.view) && dateUtils.isLastDayOf(maxTimestamp, this.state.view);
+    }
+    get statusForStateTimestamp() {
         if (!this.state.isShowingEditor) {
             return null;
         }
-
         const record = this.state.records.find((record) => record.timestamp === this.state.timestamp);
         if (!record) {
             return null;
         }
-
         return record.status;
+    }
+    get maxTimestamp() {
+        return this.state.records.length ? this.state.records[0].timestamp : this.state.timestamp;
+    }
+    get minTimestamp() {
+        return this.state.records.length ? this.state.records[this.state.records.length - 1].timestamp : this.state.timestamp;
+    }
+    get nextMaxTimestamp() {
+        let timestamp = this.state.records.length ? this.state.records[0].timestamp : this.state.timestamp;
+        timestamp = dateUtils.incrementTimestamp(timestamp, 1, this.state.view);
+        if (this.isCalendarView) {
+            while (!dateUtils.isLastDayOf(timestamp, this.state.view)) {
+                timestamp = dateUtils.incrementTimestamp(timestamp, 1, dateUtils.DAY);
+            }
+        }
+        return timestamp;
+    }
+    get nextMinTimestamp() {
+        let timestamp = this.state.records.length ? this.state.records[this.state.records.length - 1].timestamp : this.state.timestamp;
+        timestamp = dateUtils.incrementTimestamp(timestamp, -1, this.state.view);
+        if (this.isCalendarView) {
+            while (!dateUtils.isFirstDayOf(timestamp, this.state.view)) {
+                timestamp = dateUtils.incrementTimestamp(timestamp, -1, dateUtils.DAY);
+            }
+        }
+        return timestamp;
     }
 
     render() {
         return (
             <>
                 <Nav
+                    initialValue={this.state.view}
                     selectOptions={[
-                        { value: 'day', label: 'Day' },
-                        { value: 'week', label: 'Week' },
-                        { value: 'month', label: 'Month' },
+                        { value: this.views.DAY, label: 'Day' },
+                        { value: this.views.WEEK, label: 'Week' },
+                        { value: this.views.MONTH, label: 'Month' },
                     ]}
                     iconOptions={[
-                        { value: 'settings', Icon: FaUserCog },
+                        { value: this.views.SETTINGS, Icon: FaUserCog },
                     ]}
-                    defaultSelectOption={this.state.view === 'settings' ? 'day' : this.state.view}
-                    onChange={this.handleViewChange}
+                    onChange={this.changeView}
                 />
 
-                {this.state.view === 'day' && (
+                {this.state.view === this.views.DAY && this.isLoaded && (
                     <Days
+                        timestamp={this.state.timestamp}
                         records={this.state.records}
+                        onChange={this.changeTimestamp}
                         onSelect={this.openEditor}
-                        onLoadNeeded={this.handleLoadNeeded}
+                        onLoadNeeded={this.loadRecords}
                     />
                 )}
-                {this.state.view === 'week' && (
+                {this.state.view === this.views.WEEK && this.isLoaded &&  (
                     <Weeks
+                        timestamp={this.state.timestamp}
+                        records={this.state.records}
+                        onChange={this.changeTimestamp}
+                        onSelect={this.openEditor}
+                        onLoadNeeded={this.loadRecords}
                     />
                 )}
-                {this.state.view === 'month' && (
+                {this.state.view === this.views.MONTH && this.isLoaded &&  (
                     <Months
+                        timestamp={this.state.timestamp}
+                        records={this.state.records}
+                        onChange={this.changeTimestamp}
+                        onSelect={this.openEditor}
+                        onLoadNeeded={this.loadRecords}
                     />
                 )}
-                {this.state.view === 'settings' && (
+                {this.state.view === this.views.SETTINGS && (
                     <Settings
                     />
                 )}
@@ -187,7 +257,7 @@ class App extends React.Component {
                 <AnimateHeight animateOpacity height={this.state.isShowingEditor ? 'auto' : 0}>
                     <Editor
                         timestamp={this.state.timestamp}
-                        status={this.statusForTimestamp}
+                        status={this.statusForStateTimestamp}
                         onSubmit={this.saveRecord}
                         onHide={this.hideEditor}
                     />

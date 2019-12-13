@@ -22,28 +22,38 @@ class ViewSlider extends React.Component {
             this.props.onLoadNeeded('before');
         }
 
-        if (typeof this.props.afterChange === 'function') {
+        if (this.props.afterChange) {
             this.props.afterChange(slideIndex);
         }
     };
+    stopClickPropagationWhileSliding = (e) => {
+        if (this.ref.current.innerSlider.state.animating) {
+            e.stopPropagation();
+        }
+    };
+
+    get initialSlide() {
+        return typeof this.props.initialSlide === 'number' ? this.props.initialSlide : this.props.children.length - 1;
+    }
 
     render() {
-        const { children, onLoadNeeded, afterChange, ...sliderProps} = this.props;
+        const { children, onLoadNeeded, initialSlide, afterChange, ...sliderProps} = this.props;
 
         return (
-            <Slider
-                ref={this.ref}
-                className="fill-space"
-                rtl={true}
-                arrows={false}
-                infinite={false}
-                speed={300}
-                afterChange={this.handleAfterChange}
-                intialSlide={children.length - 1}
-                {...sliderProps}
-            >
-                {children}
-            </Slider>
+            <div className="view-slider-wrapper" onClickCapture={this.stopClickPropagationWhileSliding}>
+                <Slider
+                    ref={this.ref}
+                    rtl={true}
+                    arrows={false}
+                    infinite={false}
+                    speed={300}
+                    initialSlide={this.initialSlide}
+                    afterChange={this.handleAfterChange}
+                    {...sliderProps}
+                >
+                    {children}
+                </Slider>
+            </div>
         );
     }
 }
@@ -51,5 +61,7 @@ class ViewSlider extends React.Component {
 export default ViewSlider;
 
 ViewSlider.propTypes = {
+    initialSlide: PropTypes.number,
     onLoadNeeded: PropTypes.func.isRequired,
+    afterChange: PropTypes.func,
 };

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'react-proptypes';
-import WeekDay from './WeekDay';
+import MonthDay from './MonthDay';
 
-function Week(props) {
+function MonthWeek(props) {
     return (
-        <div className="view week">
+        <div className="month-week">
             {props.records.map((record) => (
-                <WeekDay
+                <MonthDay
                     key={record.timestamp}
                     {...record}
                     onSelect={props.onSelect}
@@ -16,9 +16,9 @@ function Week(props) {
     );
 }
 
-export default Week;
+export default MonthWeek;
 
-Week.propTypes = {
+MonthWeek.propTypes = {
     records: PropTypes.arrayOf(PropTypes.shape({
         timestamp: PropTypes.number,
     })).isRequired,

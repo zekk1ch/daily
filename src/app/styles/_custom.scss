@@ -1,0 +1,9 @@
+.view-slider-wrapper {
+    &,
+    .slick-slider,
+    .slick-list,
+    .slick-track,
+    .slick-slide > div:first-child {
+        height: 100%;
+    }
+}
