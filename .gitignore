@@ -1,6 +1,7 @@
+!**.gitkeep
+
 .idea
 node_modules
 
 dist/*
-
-!**.gitkeep
+test.js
