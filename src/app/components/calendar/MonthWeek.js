@@ -4,7 +4,7 @@ import MonthDay from './MonthDay';
 
 function MonthWeek(props) {
     return (
-        <div className="month-week">
+        <div className="month--week">
             {props.records.map((record) => (
                 <MonthDay
                     key={record.timestamp}

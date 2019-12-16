@@ -3,7 +3,7 @@ import PropTypes from 'react-proptypes';
 
 function WeekDay(props) {
     return (
-        <div className="week-day" onClick={() => props.onSelect(props.timestamp)}>
+        <div className="week--day" onClick={() => props.onSelect(props.timestamp)}>
             <div>{props.timestamp}</div>
             <div>{''+props.status}</div>
         </div>

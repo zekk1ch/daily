@@ -40,7 +40,7 @@ class ViewSlider extends React.Component {
         const { children, onLoadNeeded, initialSlide, afterChange, ...sliderProps} = this.props;
 
         return (
-            <div className="view-slider-wrapper" onClickCapture={this.stopClickPropagationWhileSliding}>
+            <div className="view-slider--wrapper" onClickCapture={this.stopClickPropagationWhileSliding}>
                 <Slider
                     ref={this.ref}
                     rtl={true}

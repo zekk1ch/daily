@@ -31,7 +31,7 @@ class Nav extends React.Component {
     render() {
         return (
             <nav id="nav">
-                <div id="nav-select-wrapper" onClick={this.handleSelectClick}>
+                <div id="nav--select-wrapper" onClick={this.handleSelectClick}>
                     <Select
                         value={this.state.selectValue}
                         options={this.props.selectOptions}
@@ -40,7 +40,7 @@ class Nav extends React.Component {
                     />
                 </div>
                 {this.props.iconOptions.map(({ value, Icon }, i) => (
-                    <Icon key={i} className="nav-icon" onClick={() => this.handleIconClick(value)}/>
+                    <Icon key={i} className="nav--icon" onClick={() => this.handleIconClick(value)}/>
                 ))}
             </nav>
         );

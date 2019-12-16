@@ -7,7 +7,7 @@
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
 
-    .editor-option-wrapper {
+    .editor--option-wrapper {
         position: relative;
         display: flex;
         justify-content: center;
@@ -22,18 +22,18 @@
             box-shadow: 0 0 2em 1.2em $icon-shadow-color;
         }
         &.selected.yes {
-            .editor-option-icon {
+            .editor--option-icon {
                 color: $green-color;
             }
         }
         &.selected.no {
-            .editor-option-icon {
+            .editor--option-icon {
                 color: $red-color;
             }
         }
     }
 
-    .editor-option-icon {
+    .editor--option-icon {
         width: 3em;
         height: 3em;
         z-index: 0;
@@ -41,7 +41,7 @@
     }
 }
 
-#editor-overflow {
+#editor--overflow {
     position: fixed;
     top: 0;
     width: 100%;

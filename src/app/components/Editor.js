@@ -22,13 +22,13 @@ function Editor(props) {
 
     return (
         <>
-            <div id="editor-overflow" onClick={props.onHide}/>
+            <div id="editor--overflow" onClick={props.onHide}/>
             <div id="editor">
-                <div className={`editor-option-wrapper yes${props.status === true ? ' selected' : ''}`} onClick={handleOptionClick}>
-                    <FaCheck className="editor-option-icon"/>
+                <div className={`editor--option-wrapper yes${props.status === true ? ' selected' : ''}`} onClick={handleOptionClick}>
+                    <FaCheck className="editor--option-icon"/>
                 </div>
-                <div className={`editor-option-wrapper no${props.status === false ? ' selected' : ''}`} onClick={handleOptionClick}>
-                    <FaTimes className="editor-option-icon"/>
+                <div className={`editor--option-wrapper no${props.status === false ? ' selected' : ''}`} onClick={handleOptionClick}>
+                    <FaTimes className="editor--option-icon"/>
                 </div>
             </div>
         </>
