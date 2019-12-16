@@ -17,12 +17,33 @@ class App extends React.Component {
         MONTH: dateUtils.MONTH,
         SETTINGS: 'settings',
     };
-    state = {
-        view: this.views.DAY,
-        isShowingEditor: false,
-        timestamp: dateUtils.timestamp2dateTimestamp(Date.now()),
-        records: [],
+    preferences = {
+        VIEW: 'view',
+        TIMESTAMP: 'timestamp',
     };
+
+    constructor(props) {
+        super(props);
+
+        let timestamp = Number(localStorage.getItem(this.preferences.TIMESTAMP));
+        if (!timestamp) {
+            timestamp = dateUtils.timestamp2dateTimestamp(Date.now());
+            localStorage.setItem(this.preferences.TIMESTAMP, timestamp);
+        }
+
+        let view = localStorage.getItem(this.preferences.VIEW);
+        if (!Object.values(this.views).includes(view)) {
+            view = this.views.DAY;
+            localStorage.setItem(this.preferences.VIEW, view);
+        }
+
+        this.state = {
+            view,
+            timestamp,
+            records: [],
+            isShowingEditor: false,
+        };
+    }
 
     async componentDidMount() {
         if (this.isCalendarView) {
@@ -36,16 +57,19 @@ class App extends React.Component {
     }
 
     changeView = (view) => {
+        localStorage.setItem(this.preferences.VIEW, view);
         this.setState({
             view,
-        });
+        },);
     };
     changeTimestamp = (timestamp) => {
+        localStorage.setItem(this.preferences.TIMESTAMP, timestamp);
         this.setState({
             timestamp,
         });
     };
     openEditor = (timestamp) => {
+        localStorage.setItem(this.preferences.TIMESTAMP, timestamp);
         this.setState({
             isShowingEditor: true,
             timestamp,
