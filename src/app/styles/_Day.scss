@@ -1,0 +1,32 @@
+.day {
+    .day--date {
+        color: $calendar-color-pale;
+        text-align: center;
+        font-size: 60px;
+        margin-top: 2rem;
+        transition: color 200ms;
+    }
+
+    .day--status {
+        width: 100%;
+        margin: 1rem auto 0;
+        font-size: 4em;
+        transition: transform .5s, color .3s ease .1s;
+        transform: scale(.001) rotateX(90deg) rotateY(90deg);
+
+        &.yes {
+            color: $calendar-color-green;
+            transform: scale(1) rotateX(0) rotateY(0);
+        }
+        &.no {
+            color: $calendar-color-red;
+            transform: scale(1) rotateX(180deg) rotateY(180deg);
+        }
+    }
+
+    &.with-status {
+        .day--date {
+            color: $calendar-color;
+        }
+    }
+}

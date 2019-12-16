@@ -6,3 +6,8 @@ $green-color: #00e800;
 $red-color: #e01515;
 
 $editor-color: #f9f9f9;
+$timeline-color: #626b73;
+$calendar-color: #636b73;
+$calendar-color-pale: lighten($calendar-color, 10);
+$calendar-color-green: rgba(darken($green-color, 10), 0.8);
+$calendar-color-red: rgba(darken($red-color, 6), 0.8);

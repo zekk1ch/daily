@@ -2,7 +2,36 @@
     display: flex;
     flex-direction: column;
 
-    .view {
+    .view-wrapper {
         height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .view-wrapper--content {
+            flex-grow: 1;
+
+            .view {
+                height: 100%;
+            }
+        }
+
+        .view-wrapper--timeline {
+            margin-top: 6px;
+            position: relative;
+
+            .title {
+                text-align: center;
+                font-size: 32px;
+                font-weight: normal;
+                color: $timeline-color;
+            }
+
+            .refresh {
+                position: absolute;
+                top: 6%;
+                right: 2%;
+                font-size: 22px;
+            }
+        }
     }
 }
