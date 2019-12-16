@@ -13,19 +13,19 @@ class Nav extends React.Component {
     handleIconClick = (option) => {
         this.setState({
             isSelectDisabled: true,
-        }, this.props.onChange.bind(this, option));
+        }, () => this.props.onChange(option));
     };
     handleSelectClick = () => {
         if (this.state.isSelectDisabled) {
             this.setState({
                 isSelectDisabled: false,
-            }, this.props.onChange.bind(this, this.state.selectValue));
+            }, () => this.props.onChange(this.state.selectValue));
         }
     };
     handleSelectChange = (option) => {
         this.setState({
             selectValue: option,
-        }, this.props.onChange.bind(this, option));
+        }, () => this.props.onChange(option));
     };
 
     render() {
@@ -40,7 +40,7 @@ class Nav extends React.Component {
                     />
                 </div>
                 {this.props.iconOptions.map(({ value, Icon }, i) => (
-                    <Icon key={i} className="nav-icon" onClick={this.handleIconClick.bind(this, value)}/>
+                    <Icon key={i} className="nav-icon" onClick={() => this.handleIconClick(value)}/>
                 ))}
             </nav>
         );

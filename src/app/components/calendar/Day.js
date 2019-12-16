@@ -3,7 +3,7 @@ import PropTypes from 'react-proptypes';
 
 function Day(props) {
     return (
-        <div className="view day" onClick={props.onSelect.bind(this, props.timestamp)}>
+        <div className="view day" onClick={() => props.onSelect(props.timestamp)}>
             <div className="day-timestamp">{props.timestamp}</div>
             <div className="day-status">{props.status + ''}</div>
         </div>
